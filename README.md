@@ -1,10 +1,8 @@
-# 你画我猜素材搜索 英雄联盟版
+# 你画我猜素材搜索
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+图片库中有王者荣耀，英雄联盟图，有需要的图可以提issues
 
-## Setup
-
-Make sure to install the dependencies:
+## 安装程序依赖
 
 ```bash
 # npm
@@ -20,7 +18,7 @@ yarn install
 bun install
 ```
 
-## Development Server
+## 运行程序服务
 
 Start the development server on `http://localhost:3000`:
 
@@ -71,5 +69,3 @@ yarn preview
 # bun
 bun run preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
