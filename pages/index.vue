@@ -2,7 +2,7 @@
 
 <template>
   <div class="home p-4">
-    <Search />
+    Home
   </div>
 </template>
 
