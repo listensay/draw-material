@@ -32,9 +32,9 @@ const items = ref(['jack', 'lucy']);
 <template>
   <div class="add-images">
     <a-page-header
-      style="border: 1px solid rgb(235, 237, 240)"
       title="添加图片"
       @back="() => navigateTo('/')"
+      class="border-b border-gray-200"
     />
     <div class="p-4">
       <a-form
