@@ -4,7 +4,9 @@
   <div class="body">
     <div class="layout">
       <Header></Header>
-      <slot />
+      <div>
+        <slot />
+      </div>
     </div>
   </div>
 </template>
