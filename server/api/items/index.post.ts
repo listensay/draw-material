@@ -44,6 +44,7 @@ export default defineEventHandler(async (event) => {
     return { code: 200, message: result };
   } catch (err) {
     console.error('目录已经存在:', err);
+    setResponseStatus(event, 400)
     return { code: 500, message: '目录已经存在' };
   }
 });

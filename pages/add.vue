@@ -46,44 +46,7 @@ function getBase64(file) {
 const previewVisible = ref(false);
 const previewImage = ref('');
 const previewTitle = ref('');
-const fileList = ref([
-  {
-    uid: '-1',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-2',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-3',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-4',
-    name: 'image.png',
-    status: 'done',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-xxx',
-    percent: 50,
-    name: 'image.png',
-    status: 'uploading',
-    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    uid: '-5',
-    name: 'image.png',
-    status: 'error',
-  },
-]);
+const fileList = ref([]);
 const handleCancel = () => {
   previewVisible.value = false;
   previewTitle.value = '';
@@ -96,6 +59,9 @@ const handlePreview = async file => {
   previewVisible.value = true;
   previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
 };
+
+// 如果用户没输入name 和 path 的时候，禁用上传按钮
+const disabled = computed(() => !form.name || !form.dirname)
 </script>
 
 <template>
@@ -156,19 +122,14 @@ const handlePreview = async file => {
             :action="`/api/images?name=${form.name}&path=${form.dirname}`"
             list-type="picture-card"
             @preview="handlePreview"
+            :disabled="disabled"
           >
-            <div v-if="fileList.length < 8">
-              <plus-outlined />
-              <div style="margin-top: 8px">上传</div>
-            </div>
+            <plus-outlined />
+            <div>上传</div>
           </a-upload>
           <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
             <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
-        </a-form-item>
-
-        <a-form-item>
-          <a-button type="primary" html-type="submit">完成</a-button>
         </a-form-item>
       </a-form>
     </div>

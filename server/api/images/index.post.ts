@@ -41,10 +41,10 @@ export default defineEventHandler(async (event) => {
           return reject(err);
         }
 
-        const result = [];
+        const result = <any> [];
         for (const key in files) {
           const fileArray = Array.isArray(files[key]) ? files[key] : [files[key]];
-          fileArray.forEach(file => {
+          fileArray.forEach((file: any) => {
             result.push({
               name: file.newFilename,
               url: '/images/' + file.newFilename,
@@ -62,6 +62,7 @@ export default defineEventHandler(async (event) => {
     return { code: 200, data, message: '上传成功!' };
   } catch (err) {
     console.error(err);
+    setResponseStatus(event, 400)
     return { code: 400, message: '上传失败!' };
   }
 });
