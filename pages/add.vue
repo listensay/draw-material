@@ -17,16 +17,85 @@ const VNodes = defineComponent({
 });
 const name = ref();
 const inputRef = ref();
-const addItem = e => {
+const addItem = async (e) => {
   e.preventDefault();
-  console.log('addItem');
+  const result = await useRequest('/api/items', { method: 'post', body: { name: name.value }} )
+  if(result.code !== 200) {
+    return message.error(result.data.message)
+  }
+
   items.value.push(name.value || `New item ${(index += 1)}`);
   name.value = '';
   setTimeout(() => {
     inputRef.value?.focus();
   }, 0);
 };
-const items = ref(['jack', 'lucy']);
+
+const items = ref([])
+const result = await useRequest('/api/items', { method: 'get' })
+items.value = result.data
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+const previewVisible = ref(false);
+const previewImage = ref('');
+const previewTitle = ref('');
+const fileList = ref([
+  {
+    uid: '-1',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-2',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-3',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-4',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-xxx',
+    percent: 50,
+    name: 'image.png',
+    status: 'uploading',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-5',
+    name: 'image.png',
+    status: 'error',
+  },
+]);
+const handleCancel = () => {
+  previewVisible.value = false;
+  previewTitle.value = '';
+};
+const handlePreview = async file => {
+  if (!file.url && !file.preview) {
+    file.preview = await getBase64(file.originFileObj);
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+  previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+};
 </script>
 
 <template>
@@ -66,15 +135,36 @@ const items = ref(['jack', 'lucy']);
               <a-divider style="margin: 4px 0" />
               <a-space style="padding: 4px 8px">
                 <a-input ref="inputRef" v-model:value="name" placeholder="Please enter item" />
-                <a-button type="text" @click="addItem">
+                <a-button type="text" @click="addItem" class="flex items-center">
                   <template #icon>
                     <plus-outlined />
                   </template>
-                  Add item
+                  添加新文件夹目录
                 </a-button>
               </a-space>
             </template>
           </a-select>
+        </a-form-item>
+
+        <a-form-item
+          label="图片上传"
+          name="dirname"
+          :rules="[{ required: true, message: '请上传图片!' }]"
+        >
+          <a-upload
+            v-model:file-list="fileList"
+            :action="`/api/images?name=${form.name}&path=${form.dirname}`"
+            list-type="picture-card"
+            @preview="handlePreview"
+          >
+            <div v-if="fileList.length < 8">
+              <plus-outlined />
+              <div style="margin-top: 8px">上传</div>
+            </div>
+          </a-upload>
+          <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
+          </a-modal>
         </a-form-item>
 
         <a-form-item>
