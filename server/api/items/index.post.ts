@@ -29,7 +29,7 @@ const createDirectory = (directoryPath: any) => {
 
 export default defineEventHandler(async (event) => {
   const { name } = await readBody(event); // 假设请求体中包含文件夹名称
-  const imagesPath = path.join(process.cwd(), 'public/images');
+  const imagesPath = path.join(process.cwd(), './public/images');
   const newDirectoryPath = path.join(imagesPath, name);
 
   try {

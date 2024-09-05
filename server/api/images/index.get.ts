@@ -34,7 +34,7 @@ const getDirectoryContent = (directoryPath: any, basePath: any) => {
 };
 
 export default defineEventHandler(async (event) => {
-  const imagesPath = path.join(process.cwd(), 'public/images');
+  const imagesPath = path.join(process.cwd(), './public/images');
 
   try {
     // 获取目录内容
